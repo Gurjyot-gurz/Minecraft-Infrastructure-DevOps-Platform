@@ -1,0 +1,35 @@
+# Minecraft world and runtime data
+world/
+**/world/
+*.mca
+*.mcr
+*.dat
+*.dat_old
+session.lock
+usercache.json
+
+# Backups and archives
+backups/
+**/backups/
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
+# Logs
+logs/
+*.log
+
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
