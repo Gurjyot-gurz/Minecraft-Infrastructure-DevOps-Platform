@@ -82,4 +82,3 @@ Observed result: active
 Initial backup created, archive integrity checked, and isolated
 extraction completed. Partial file comparison passed; seven
 world-state files differed. Further recovery validation is required.
-
