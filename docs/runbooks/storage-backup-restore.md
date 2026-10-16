@@ -70,15 +70,39 @@ sudo systemctl is-active minecraft
 Observed result: active
 
 ## 8. Limitations and Next Improvements
-- The archive was stored on the same machine as the Minecraft server.
-- A successful extraction does not prove that a Minecraft world
-  can be loaded successfully from the restored copy.
-- A full restoration test has not been performed.
+- The backup archive is stored on the same machine as the Minecraft server.
+- Seven world-state files differed during the earlier comparison.
+  The exact cause and timing of these differences have not been established.
+- The isolated restore test verified that the restored world could start
+  successfully, but gameplay and player-data validation remain incomplete.
 - Automated backups and retention policies are not yet configured.
 - An off-device backup has not been configured.
 - Automatic startup after a system reboot has not been tested.
 
-## 9. Current Status
-Initial backup created, archive integrity checked, and isolated
-extraction completed. Partial file comparison passed; seven
-world-state files differed. Further recovery validation is required.
+## 9. Restore Validation (2026-10-16)
+- Extracted the backup into `/opt/minecraft-restore-test`.
+- Verified that the restored world contained `world/level.dat`.
+- Configured the test server to use `127.0.0.1:25566`,
+  keeping it separate from the live server on port `25565`.
+- Started the restored world using Minecraft Java Edition 26.3.
+- The server reached the `Done` state and loaded the restored world.
+- Stopped the test server using the `stop` command.
+- Confirmed that the test server shut down and saved its worlds.
+- Verified that the live Minecraft service remained active
+  and listening on port `25565`.
+- Confirmed that port `25566` was no longer listening after shutdown.
+
+### Restore Test Limitations
+- Gameplay and player-data validation have not been completed.
+- The seven differences found during the earlier comparison remain unexplained.
+- Exact equivalence between the archived world and the live world
+  has not been established.
+- The backup remains on the same machine as the server.
+
+## 10. Current Status
+The initial backup archive passed gzip integrity verification and
+was extracted successfully. The restored world started and shut down
+cleanly in isolation. The live server remained active throughout the
+final verification. Further work is required to investigate the
+world-file differences, automate backups, configure retention,
+establish an off-device copy, and test startup after reboot.
