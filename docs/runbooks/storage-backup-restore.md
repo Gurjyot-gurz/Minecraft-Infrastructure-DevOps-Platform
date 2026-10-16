@@ -172,3 +172,28 @@ establish an off-device copy, and test startup after reboot.
 - Off-device backup has not been configured.
 - Gameplay and player-data validation of the restored world remain incomplete.
 - Automatic startup after a system reboot has not been tested.
+
+## 12. Backup Retention Policy
+
+### Purpose
+The backup script applies a 7-day retention policy to prevent backup storage from growing indefinitely.
+
+### Retention Configuration
+- Retention period: 7 days.
+- Backup directory: `/opt/minecraft/backups`.
+- The script identifies backup archives older than 7 days.
+- An archive is deleted only when its matching `.sha256` checksum file exists.
+- The archive and its checksum file are removed together.
+- Archives without a matching checksum file are preserved and logged as warnings.
+
+### Validation
+- The backup script passed the Bash syntax check.
+- A new backup was created and its gzip integrity was verified.
+- The SHA-256 checksum was generated and verified.
+- The 7-day retention policy executed successfully.
+- The Minecraft service restarted successfully after the backup.
+
+### Important Notes
+- Successful execution of the retention policy does not necessarily mean a backup was deleted.
+- The script must be tested periodically to ensure backups remain recoverable.
+- At least one verified, recoverable backup should be maintained before relying on automated cleanup.
