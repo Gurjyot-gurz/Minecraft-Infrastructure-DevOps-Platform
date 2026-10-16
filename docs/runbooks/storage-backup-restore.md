@@ -106,3 +106,69 @@ cleanly in isolation. The live server remained active throughout the
 final verification. Further work is required to investigate the
 world-file differences, automate backups, configure retention,
 establish an off-device copy, and test startup after reboot.
+
+## 11. Automated Backup Script — Manual Test (2026-10-16)
+
+### Script
+- Script path: `/usr/local/bin/minecraft-backup.sh`
+- The script requires root privileges.
+- Uses `flock` to prevent overlapping backup runs.
+- Gracefully stops Minecraft before archiving the world.
+- Includes the world and available server configuration files.
+- Verifies the archive with `gzip -t`.
+- Generates and verifies a SHA-256 checksum.
+- Attempts to restart Minecraft if it was active before the backup.
+- Retention cleanup is intentionally disabled during initial testing.
+
+### Test Results
+- Executed the script manually on 2026-10-16.
+- Minecraft stopped gracefully before backup creation.
+- Archive integrity verification passed.
+- SHA-256 checksum verification passed.
+- The archive and checksum were published successfully.
+- Minecraft service restarted successfully and returned to the active state.
+- The script reported successful completion.
+
+### Backup Created
+`/opt/minecraft/backups/minecraft-backup-2026-10-16_15-35-24.tar.gz`
+
+### Remaining Limitations
+- The backup is stored on the same machine as the live server.
+- Automatic scheduling has not been configured.
+- Retention cleanup remains disabled.
+- Off-device backup has not been configured.
+- Gameplay and player-data validation of the restored world remain incomplete.
+- Automatic startup after a system reboot has not been tested.
+
+## 11. Automated Backup Script — Manual Test (2026-10-16)
+
+### Script
+- Script path: `/usr/local/bin/minecraft-backup.sh`
+- The script requires root privileges.
+- Uses `flock` to prevent overlapping backup runs.
+- Gracefully stops Minecraft before archiving the world.
+- Includes the world and available server configuration files.
+- Verifies the archive with `gzip -t`.
+- Generates and verifies a SHA-256 checksum.
+- Attempts to restart Minecraft if it was active before the backup.
+- Retention cleanup is intentionally disabled during initial testing.
+
+### Test Results
+- Executed the script manually on 2026-10-16.
+- Minecraft stopped gracefully before backup creation.
+- Archive integrity verification passed.
+- SHA-256 checksum verification passed.
+- The archive and checksum were published successfully.
+- Minecraft service restarted successfully and returned to the active state.
+- The script reported successful completion.
+
+### Backup Created
+`/opt/minecraft/backups/minecraft-backup-2026-10-16_15-35-24.tar.gz`
+
+### Remaining Limitations
+- The backup is stored on the same machine as the live server.
+- Automatic scheduling has not been configured.
+- Retention cleanup remains disabled.
+- Off-device backup has not been configured.
+- Gameplay and player-data validation of the restored world remain incomplete.
+- Automatic startup after a system reboot has not been tested.
