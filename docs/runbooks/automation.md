@@ -117,3 +117,58 @@ The script's actual recovery behaviour must be validated separately from a succe
 - Production backup script signal handling has not been runtime-tested.
 - Minecraft service recovery under interrupted backup conditions remains unverified.
 - Bash syntax validation does not guarantee runtime correctness.
+
+## Task 4: Scheduled Automation
+
+### Implementation
+
+A systemd service and timer were created for automated
+Minecraft health checks.
+
+- Service: `minecraft-health-check.service`
+- Timer: `minecraft-health-check.timer`
+- Schedule: Initial run after boot, followed by five-minute intervals.
+- Logs: Available through `journalctl`.
+- Exit status: 0 indicates success; non-zero indicates failure.
+
+### Validation Results
+
+- Health-check script syntax: Passed.
+- Health-check success path: Passed.
+- Bash error-handling demonstration: Passed.
+- Missing-directory failure returned exit code 1.
+- Production backup script syntax: Passed.
+- systemd health-check service: Passed.
+- Timer enabled and active: Passed.
+- Scheduled execution observed at 10:37:58 IST on 2026-10-17.
+- All three health-checks passed during scheduled execution.
+- Minecraft service remained active.
+
+## Task 5: Failure Testing and Final Validation
+
+### Completed
+
+- Health-check success path verified.
+- Error-handling demonstration verified.
+- Expected failure and exit code 1 verified.
+- Isolated signal-handling test previously completed.
+- Production backup script syntax checked.
+- systemd timer and health-check execution verified.
+- Relevant logs and service status inspected.
+
+### Remaining Limitations
+
+- Production backup interruption and service recovery have not
+  been validated under controlled production conditions.
+- Backup scheduling remains deferred until recovery behaviour
+  is validated.
+- Automatic restore and automatic deletion of world data are
+  not implemented.
+
+### Phase 5 Status
+
+Health-check automation, failure demonstrations, and scheduled
+health-check validation are complete.
+
+Production backup interruption and recovery validation remains
+outstanding and must not be marked as successful until tested.
