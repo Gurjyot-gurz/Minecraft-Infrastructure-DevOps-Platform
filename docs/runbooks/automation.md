@@ -105,6 +105,13 @@ The script's actual recovery behaviour must be validated separately from a succe
 - `scripts/failure-test.sh`: expected failure confirmed with exit code 1.
 - `scripts/signal-handling-test.sh`: SIGTERM handling and EXIT cleanup passed; exit status 143 verified.
 - `sudo bash -n /usr/local/bin/minecraft-backup.sh`: passed after editing.
+- systemd configuration validation: Passed.
+- timer enabled: Yes.
+- manual service execution result: Passed.
+- service exit status: 0.
+- journal logs reviewed: Yes.
+- Minecraft service status: Active.
+- scheduled execution observed: [Yes/No — based on journal evidence].
 
 **Limitations:**
 - Production backup script signal handling has not been runtime-tested.
