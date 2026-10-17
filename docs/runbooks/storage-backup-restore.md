@@ -27,15 +27,17 @@ sudo tar -czf "/opt/minecraft/backups/minecraft-backup-$(date +%Y-%m-%d_%H-%M-%S
   -C /opt/minecraft \
   world server.properties whitelist.json ops.json \
   banned-players.json banned-ips.json eula.txt
-
+```
 ## 4. Backup Artifact
 - Archive: minecraft-backup-2026-10-14_12-15-23.tar.gz
 - Location: /opt/minecraft/backups/
 - Size: approximately 9.9 MB
 - SHA-256:
   41bc05b97758363b623c5e116d35cac427dde5fba4691cd40338d29ed70ca4ad
+```
 
 ## 5. Validation
+```
 The following checks were performed:
 - Archive existence verified.
 - Archive contents listed successfully.
@@ -46,9 +48,10 @@ The following checks were performed:
 - Both world directories contained 39 files.
 
 ## 6. Restore Comparison
+```bash
 Command:
 sudo diff -qr /opt/minecraft/world /tmp/minecraft-restore-test/world
-
+```
 Seven files differed:
 - data/minecraft/weather.dat
 - data/minecraft/world_clocks.dat
@@ -75,8 +78,8 @@ Observed result: active
   The exact cause and timing of these differences have not been established.
 - The isolated restore test verified that the restored world could start
   successfully, but gameplay and player-data validation remain incomplete.
-- Automated backups and retention policies are not yet configured.
-- An off-device backup has not been configured.
+- Automated local backups, seven-day local retention, and S3 off-device copies are configured in the backup script.
+- An S3 off-device backup has been configured and validated; interrupted-backup recovery still requires testing.
 - Automatic startup after a system reboot has not been tested.
 
 ## 9. Restore Validation (2026-10-16)
@@ -136,40 +139,7 @@ establish an off-device copy, and test startup after reboot.
 - The backup is stored on the same machine as the live server.
 - Automatic scheduling has not been configured.
 - Retention cleanup remains disabled.
-- Off-device backup has not been configured.
-- Gameplay and player-data validation of the restored world remain incomplete.
-- Automatic startup after a system reboot has not been tested.
-
-## 11. Automated Backup Script — Manual Test (2026-10-16)
-
-### Script
-- Script path: `/usr/local/bin/minecraft-backup.sh`
-- The script requires root privileges.
-- Uses `flock` to prevent overlapping backup runs.
-- Gracefully stops Minecraft before archiving the world.
-- Includes the world and available server configuration files.
-- Verifies the archive with `gzip -t`.
-- Generates and verifies a SHA-256 checksum.
-- Attempts to restart Minecraft if it was active before the backup.
-- Retention cleanup is intentionally disabled during initial testing.
-
-### Test Results
-- Executed the script manually on 2026-10-16.
-- Minecraft stopped gracefully before backup creation.
-- Archive integrity verification passed.
-- SHA-256 checksum verification passed.
-- The archive and checksum were published successfully.
-- Minecraft service restarted successfully and returned to the active state.
-- The script reported successful completion.
-
-### Backup Created
-`/opt/minecraft/backups/minecraft-backup-2026-10-16_15-35-24.tar.gz`
-
-### Remaining Limitations
-- The backup is stored on the same machine as the live server.
-- Automatic scheduling has not been configured.
-- Retention cleanup remains disabled.
-- Off-device backup has not been configured.
+- S3 backup and isolated restore have been validated; production recovery scenarios remain partially untested.
 - Gameplay and player-data validation of the restored world remain incomplete.
 - Automatic startup after a system reboot has not been tested.
 
@@ -305,3 +275,39 @@ A reboot-based startup test has not yet been performed. AWS access keys must rem
 8. Confirm service health and retain the original backup until recovery is verified.
 
 Never extract a recovery archive directly over a running live world.
+
+## 14. Phase 5 Task 3 — Backup Automation Integration
+
+### Objective
+
+Validate the existing Minecraft backup workflow without unnecessarily
+interrupting the live Minecraft service.
+
+### Existing implementation
+
+The backup script at `/usr/local/bin/minecraft-backup.sh`:
+
+- Checks AWS authentication and S3 bucket access before stopping Minecraft.
+- Uses a lock to prevent overlapping backup executions.
+- Stops the Minecraft service gracefully before archiving the world.
+- Creates and validates a compressed backup archive.
+- Generates and verifies a SHA-256 checksum.
+- Uploads the archive and checksum to Amazon S3.
+- Independently verifies the uploaded archive checksum.
+- Applies a seven-day local retention policy.
+- Attempts to restart Minecraft if it was active before backup execution.
+
+### Previously completed validation
+
+- Local backup archive integrity verified.
+- Local SHA-256 checksum verified.
+- S3 backup uploaded successfully.
+- Remote archive checksum matched the local archive.
+- S3 archive downloaded, checksum-verified, and extracted.
+- Isolated restored server started successfully on port 25566.
+
+### Remaining limitations
+
+- Production backup interruption and service recovery remain unverified.
+- Scheduled backup execution is not yet configured.
+- A successful backup does not guarantee every possible recovery scenario.
