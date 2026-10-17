@@ -16,7 +16,7 @@ handle_signal() {
     local signal_name="$1"
 
     printf '[WARNING] Received %s; exiting safely.\n' "$signal_name"
-    exit 128
+    exit 143
 }
 
 trap cleanup EXIT

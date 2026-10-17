@@ -103,10 +103,10 @@ The script's actual recovery behaviour must be validated separately from a succe
 **Validation:**
 - `scripts/error-handling-demo.sh`: passed.
 - `scripts/failure-test.sh`: expected failure confirmed with exit code 1.
-- `scripts/signal-handling-test.sh`: SIGTERM handler and EXIT cleanup executed successfully.
+- `scripts/signal-handling-test.sh`: SIGTERM handling and EXIT cleanup passed; exit status 143 verified.
 - `sudo bash -n /usr/local/bin/minecraft-backup.sh`: passed after editing.
 
 **Limitations:**
-- The production backup script's signal-handling behaviour has not yet been tested.
+- Production backup script signal handling has not been runtime-tested.
 - Minecraft service recovery under interrupted backup conditions remains unverified.
-- A successful Bash syntax check does not guarantee runtime correctness.
+- Bash syntax validation does not guarantee runtime correctness.
